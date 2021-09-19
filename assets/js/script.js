@@ -1,21 +1,28 @@
 var timerButton = document.querySelector('.start-timer');
 var headlinerEl = document.querySelector('#headliner');
-var subcontentEl = document.querySelector('#sub-list');
-var highscoreList = localStorage.getItem('hsList');
+var subcontentEl = document.querySelector('#sub-content');
 headlinerEl.textContent = "Highscores";
 var questionIndex = 0;
 
 var timeLeft = 60;
 
+// test code to make sure that the highscore list was properly working for both logic and css
+// scores = [1, 2, 3, 4, 5, 6, 7];
+// users = ['rp', 'kp', 'cp', 'fp', 'ep', 'ap', 'KP',]
+
+localStorage.setItem("scores", JSON.stringify(scores));
+localStorage.setItem("users",  JSON.stringify(users));
+
 //nested array to hold all the answers
-var answers = [
-    first['a'],
-    second['b'],
-    third['e'],
-    fourth['d']
-];
+var answers = {
+    A: [],
+    B: [],
+    C: [],
+    D: []
+}
 
 renderStartButton();
+renderHighscore();
 
 //create a new button to start the quiz
 function renderStartButton() {
@@ -32,13 +39,33 @@ function setHighscore(){
 
 function renderHighscore() {
     headlinerEl.textContent = "Highscores";
+    storageScores = JSON.parse(localStorage.getItem("scores"));
+    storageUsers = JSON.parse(localStorage.getItem("users"));
+    //logic behind this function will be if it isnt empty, then for loop the local storage
+        //if it is empty then display text stating that there are no high scores to display yet
+    console.log(storageUsers);
 
-    if (highscoreList !== null) {
-        for (let i = 0; i < highscoreList.length; i++) {
+    
+    if (storageUsers !== null) {
+        //create the ul for the subcontent and give it a class so that it can be deleted later
+        var highscoreList = document.createElement('ol');
+        highscoreList.setAttribute('class', 'sub-list');
+        subcontentEl.appendChild(highscoreList);
+
+        for (let i = 0; i < storageUsers.length; i++) {
             //create list item
             //set the content of highscoreList[i] to the new list item
             //append the list item to the mainListEl
+            var highscoreListItem = document.createElement('li');
+            highscoreListItem.textContent = storageUsers[i] + ": " + storageScores[i];
+            highscoreList.appendChild(highscoreListItem);
         }
+    } else {
+        // display text that states that there are no high scores to pull from local storage
+        var noContent = document.createElement('h3');
+        noContent.setAttribute('class', 'temp-class');
+        noContent.textContent = "There are currently no highscores recorded";
+        subcontentEl.appendChild(noContent);
     }
 }
 
