@@ -15,10 +15,10 @@ var users = [];
 
 //nested array to hold all the answers
 var answers = [
-    A =  ['1.a', '1.b', '1.c', '1.d'],
-    B =  ['2.a', '2.b', '2.c', '2.d'],
-    C =  ['3.a', '3.b', '3.c', '3.d'],
-    D = ['4.a', '4.b', '4.c', '4.d']
+    A =  ['1.a', '.append/.appendChild', '1.c', '1.d'],
+    B =  ['2.a', '57', '2.c', '2.d'],
+    C =  ['3.a', 'Objects', '3.c', '3.d'],
+    D = ['4.a', 'Netscape', '4.c', '4.d']
 ];
 
 renderStartButton();
@@ -93,8 +93,33 @@ document.addEventListener('click', function(event) {
         //call the function to set the 1st question
         setQuestion();
     } else if (event.target.className === 'answer-Button') {
+        //checks that the button pressed is the one of the answer buttons
+        //checks to see if the answer is wrong or corrects then responds accordingly
+        //adds a 1s pause before loading the next question so that the user can register if they got the answer right or wrong
+        //if wrong then the timer goes down by 10s
+        let pauseLeft = 1;
         questionIndex++;
-        setQuestion();
+        if (event.target.id === 'key-answer') {
+            console.log(event.target);
+            event.target.style.backgroundColor = "green";
+            event.target.style.color = "white";
+        } else {
+            event.target.style.backgroundColor = "red";
+            event.target.style.color = "white";
+
+            timeLeft -= 10;
+        }
+
+        pauseInterval = setInterval(function() {
+            pauseLeft--;
+
+            if (pauseLeft === 0) {
+                clearInterval(pauseInterval);
+                setQuestion();   
+            }
+        }, 1000);
+
+        
     //I hate this function but it works now. sorts the scores and corresponding users
     } else if (event.target.className === 'submit-Button') {
         getHighscores();
@@ -141,8 +166,6 @@ function setTime() {
         if (timeLeft === -1) {
             timer.textContent = "Times Up";
             clearInterval(timeInterval);
-            //call the function to set the initials and record highscore
-
         }
     }, 1000);
 }
