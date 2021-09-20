@@ -7,9 +7,9 @@ var questionIndex = 0;
 var timeInterval;
 var timeLeft = 60;
 
-// test code to make sure that the highscore list was properly working for both logic and css
-scores = [];
-users = []
+var scores = [];
+var users = [];
+
 // localStorage.setItem("scores", JSON.stringify(scores));
 // localStorage.setItem("users",  JSON.stringify(users));
 
@@ -36,23 +36,22 @@ function renderStartButton() {
 //done
 function renderHighscore() {
     headlinerEl.textContent = "Highscores";
-    storageScores = JSON.parse(localStorage.getItem("scores"));
-    storageUsers = JSON.parse(localStorage.getItem("users"));
+    getHighscores();
     //logic behind this function will be if it isnt empty, then for loop the local storage
         //if it is empty then display text stating that there are no high scores to display yet
  
-    if (storageUsers !== null) {
+    if (users !== null) {
         //create the ul for the subcontent and give it a class so that it can be deleted later
         var highscoreList = document.createElement('ol');
         highscoreList.setAttribute('class', 'temp-class');
         subcontentEl.appendChild(highscoreList);
 
-        for (let i = 0; i < storageUsers.length; i++) {
+        for (let i = 0; i < users.length; i++) {
             //create list item
             //set the content of highscoreList[i] to the new list item
             //append the list item to the mainListEl
             var highscoreListItem = document.createElement('li');
-            highscoreListItem.textContent = storageUsers[i] + ": " + storageScores[i];
+            highscoreListItem.textContent = users[i] + ": " + scores[i];
             highscoreList.appendChild(highscoreListItem);
         }
     } else {
@@ -62,6 +61,22 @@ function renderHighscore() {
         noContent.textContent = "There are currently no highscores recorded";
         subcontentEl.appendChild(noContent);
     }
+}
+
+function setHighscore() {
+    localStorage.setItem("users",  JSON.stringify(users));
+    localStorage.setItem("scores",  JSON.stringify(scores));
+
+    document.querySelector('.initials-input').remove();
+    document.querySelector('.timing').remove();
+
+    renderStartButton();
+    renderHighscore();
+}
+
+function getHighscores() {
+    scores = JSON.parse(localStorage.getItem("scores"));
+    users = JSON.parse(localStorage.getItem("users"));
 }
 
 //listener event for the buttons
@@ -80,20 +95,34 @@ document.addEventListener('click', function(event) {
     } else if (event.target.className === 'answer-Button') {
         questionIndex++;
         setQuestion();
+    //I hate this function but it works now. sorts the scores and corresponding users
     } else if (event.target.className === 'submit-Button') {
+        getHighscores();
+        let inputtedUser = document.querySelector('#initials-value').value;
 
-        console.log(document.querySelector('#initials-value').value)
-        users.push(document.querySelector('#initials-value').value);
-        localStorage.setItem("users",  JSON.stringify(users));
+        if (scores == undefined) {
+            users = [inputtedUser];
+            scores = [timeLeft];
+            setHighscore();
+            return;
+        } else {
+            if (timeLeft < scores[scores.length - 1]){
+                users.push(inputtedUser);
+                scores.push(timeLeft);
+            } else {
+                for (var i = 0; i < scores.length; i++) {
+                    if (timeLeft > scores[i]) {
+                        users.splice(i, 0, inputtedUser);
+                        scores.splice(i, 0, timeLeft);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
 
-        scores.push(timeLeft);
-        localStorage.setItem("scores",  JSON.stringify(scores));
-
-        document.querySelector('.initials-input').remove();
-        document.querySelector('.timing').remove();
-
-        renderStartButton();
-        renderHighscore();
+        setHighscore();
     }
 })
 
@@ -147,7 +176,6 @@ function renderAnswerButtons() {
     answerList.setAttribute('class', 'temp-class');
     subcontentEl.appendChild(answerList);
 
-    console.log(answers[questionIndex])
     for (var i = 0; i < 4; i++) {
         var answerButton = document.createElement('button');
         var answerListItem = document.createElement('li');
