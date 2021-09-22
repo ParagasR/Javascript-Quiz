@@ -6,7 +6,7 @@ headlinerEl.textContent = "Highscores";
 var questionIndex = 0;
 var timeInterval;
 var timeLeft = 60;
-
+var timer = document.createElement('h2');
 var scores = [];
 var users = [];
 
@@ -15,10 +15,10 @@ var users = [];
 
 //nested array to hold all the answers
 var answers = [
-    A =  ['1.a', '.append/.appendChild', '1.c', '1.d'],
-    B =  ['2.a', '57', '2.c', '2.d'],
-    C =  ['3.a', 'Objects', '3.c', '3.d'],
-    D = ['4.a', 'Netscape', '4.c', '4.d']
+    A =  ['.createElement', '.append/.appendChild', '.querytSelector', '.addElement'],
+    B =  ['12', '57', '210', '39'],
+    C =  ['Numbers', 'Objects', 'String', 'Null until assigned'],
+    D = ['Java', 'Netscape', 'Visual Studio', 'Microsoft']
 ];
 
 renderStartButton();
@@ -154,7 +154,6 @@ document.addEventListener('click', function(event) {
 
 function setTime() {
     //function for the timer and rending the end of the quiz
-    let timer = document.createElement('h2');
     timer.setAttribute('class', 'timing');
     timer.textContent = timeLeft;
     timerButton.appendChild(timer);
@@ -194,6 +193,7 @@ function renderAnswerButtons() {
 
     if (questionIndex === 4) {
         //return out of this and end the function
+        timer.textContent = timeLeft;
         postQuizEntry();
         return;
     }
@@ -229,8 +229,7 @@ function postQuizEntry() {
     //set the headliner to something that tells the user to record their initials
     //create a form for the user to enter their info
     //give the form an ID so that we can use an event listener for that form specifically
-    clearInterval(timeInterval);
- 
+    clearInterval(timeInterval);  
     headlinerEl.textContent = "Let's Record Your Score!";
 
     var initialsForms= document.createElement('form');
