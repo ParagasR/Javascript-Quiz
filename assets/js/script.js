@@ -109,6 +109,9 @@ document.addEventListener('click', function(event) {
             event.target.classList.add('is-danger')
 
             timeLeft -= 10;
+            if (timeLeft < 0) {
+                timeLeft = 0;
+            }
         }
 
         pauseInterval = setInterval(function() {
