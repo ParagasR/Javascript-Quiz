@@ -1,0 +1,23 @@
+.main-content h2 {
+    font-size: larger;
+    color:black;
+    display: flex;
+    justify-content: center;
+}
+
+.main-content {
+    height: 50px;
+    margin-top: 50px;
+}
+
+#sub-content {
+    font-size: large;
+}
+
+main {
+    height: 100vw;
+}
+
+h2 {
+    font-size: 25px;
+}

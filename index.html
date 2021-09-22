@@ -6,27 +6,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./assets/css/reset.css"/>
-        <link rel="stylesheet" href="./assets/css/style.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <link rel="stylesheet" href="./assets/css/style.css"/>
+
 
         <title>Pop Quiz!</title>
     </head>
 
     <body>
         <header>
-            <h1>Quiz Time!</h1>
-            <div class="start-timer"></div>
+            <h1 class='title is-1 is-justify-content-center is-flex m-3'>Quiz Time!</h1>
+            <div class="start-timer is-justify-content-center is-flex m-3"></div>
         </header>
 
-        <main>
-            <container class="main-content">
-                <h2 id="headliner"
+        <main class='tile is-ancestor is-mobile is-justify-content-center align-items-center'>
+            <container class="main-content container tile columns is-mobile is-parent is-vertical ">
+                <h2 id="headliner" class="tile column is-child notification is-primary"
                     data-highscore="Highscore"
                     data-question='["How do you render an element from javascript onto the window?", "What does 3 + 2 + 7 equal?", "What is the data type of variables in JavaScript?", "What company developed Javascript?"]'
                     data-state="highscore"
                 ></h2>
                 
-                <div id="sub-content"></div>
+                <div id="sub-content" class="tile column is-child notification"></div>
             </container>
         </main>
         <script src="./assets/js/script.js"></script>

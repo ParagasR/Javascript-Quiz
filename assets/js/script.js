@@ -28,7 +28,8 @@ renderHighscore();
 function renderStartButton() {
     //create a new button to start the quiz
     let startBtn = document.createElement('button');
-    startBtn.setAttribute('class', 'start-Button');
+    startBtn.setAttribute('class', 'button is-primary is-justify-content-center');
+    startBtn.setAttribute('id', 'start-Button')
     startBtn.textContent = "Start Quiz";
     timerButton.appendChild(startBtn);
 }
@@ -83,7 +84,7 @@ function getHighscores() {
 document.addEventListener('click', function(event) {
     event.preventDefault();
 
-    if (event.target.className === 'start-Button') {
+    if (event.target.id === 'start-Button') {
         timeLeft = 60;
         questionIndex = 0;
         event.target.remove();
@@ -92,7 +93,7 @@ document.addEventListener('click', function(event) {
 
         //call the function to set the 1st question
         setQuestion();
-    } else if (event.target.className === 'answer-Button') {
+    } else if (event.target.id === 'answer-Button' || event.target.id === 'key-answer') {
         //checks that the button pressed is the one of the answer buttons
         //checks to see if the answer is wrong or corrects then responds accordingly
         //adds a 1s pause before loading the next question so that the user can register if they got the answer right or wrong
@@ -101,11 +102,11 @@ document.addEventListener('click', function(event) {
         questionIndex++;
         if (event.target.id === 'key-answer') {
             console.log(event.target);
-            event.target.style.backgroundColor = "green";
-            event.target.style.color = "white";
+            event.target.classList.remove('is-primary');
+            event.target.classList.add('is-success');
         } else {
-            event.target.style.backgroundColor = "red";
-            event.target.style.color = "white";
+            event.target.classList.remove('is-primary');
+            event.target.classList.add('is-danger')
 
             timeLeft -= 10;
         }
@@ -117,11 +118,11 @@ document.addEventListener('click', function(event) {
                 clearInterval(pauseInterval);
                 setQuestion();   
             }
-        }, 1000);
+        }, 500);
 
         
     //I hate this function but it works now. sorts the scores and corresponding users
-    } else if (event.target.className === 'submit-Button') {
+    } else if (event.target.id === 'submit-Button') {
         getHighscores();
         let inputtedUser = document.querySelector('#initials-value').value;
 
@@ -164,8 +165,11 @@ function setTime() {
         
         //I want the timer to keep the 0 up for a little bit of more time
         if (timeLeft === -1) {
+            timeLeft = 0;
             timer.textContent = "Times Up";
             clearInterval(timeInterval);
+            clearSubContent();
+            postQuizEntry();
         }
     }, 1000);
 }
@@ -186,8 +190,7 @@ function setQuestion() {
 //not yet done, still need checks to exit the function to check the end of the quiz
 function renderAnswerButtons() {
     //clear contents of the subcontent
-    var itemDelete = document.querySelector('.temp-class');
-    itemDelete.remove();
+    clearSubContent();
 
     if (questionIndex === 4) {
         //return out of this and end the function
@@ -202,7 +205,8 @@ function renderAnswerButtons() {
     for (var i = 0; i < 4; i++) {
         var answerButton = document.createElement('button');
         var answerListItem = document.createElement('li');
-        answerButton.setAttribute('class', 'answer-Button')
+        answerButton.setAttribute('id', 'answer-Button')
+        answerButton.setAttribute('class', 'button is-info m-1');
         answerButton.textContent = answers[questionIndex][i];
 
         //set the button with class with the correct answer
@@ -216,11 +220,17 @@ function renderAnswerButtons() {
     }
 }
 
+function clearSubContent() {
+    var itemDelete = document.querySelector('.temp-class');
+    itemDelete.remove();
+}
+
 function postQuizEntry() {
     //set the headliner to something that tells the user to record their initials
     //create a form for the user to enter their info
     //give the form an ID so that we can use an event listener for that form specifically
     clearInterval(timeInterval);
+ 
     headlinerEl.textContent = "Let's Record Your Score!";
 
     var initialsForms= document.createElement('form');
@@ -228,12 +238,14 @@ function postQuizEntry() {
 
     var initialsInput = document.createElement('input');
     initialsInput.setAttribute('id', 'initials-value')
+    initialsInput.setAttribute('class', 'm-3')
     initialsInput.setAttribute('type', 'text');
     initialsInput.setAttribute('name', 'initials');
     initialsInput.setAttribute('placeholder', "Please Enter Initials Here");
 
     var submitButton = document.createElement('button');
-    submitButton.setAttribute('class', "submit-Button");
+    submitButton.setAttribute('id', "submit-Button");
+    submitButton.setAttribute('class', 'button is-primary mx-3');
     submitButton.textContent = "Submit";
 
     initialsForms.appendChild(initialsInput);
